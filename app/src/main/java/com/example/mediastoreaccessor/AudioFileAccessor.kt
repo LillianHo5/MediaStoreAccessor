@@ -5,7 +5,6 @@ import android.content.ContentUris
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import java.util.*
 
 class AudioFileAccessor {
     // Container for information about each audio file
@@ -16,7 +15,7 @@ class AudioFileAccessor {
         val mimeType: String
     )
     /*
-        make an example code that creates + saves file -> read it
+        TODO: make an example code that creates + saves file -> read it??
      */
 
     fun getAudioFiles(contentResolver: ContentResolver): List<AudioFile> {
@@ -51,6 +50,7 @@ class AudioFileAccessor {
         }
 
         query?.use {
+            // Cache column indices
             val idColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             val titleColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
             val dataColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
@@ -61,13 +61,13 @@ class AudioFileAccessor {
                 val id = it.getLong(idColumn)
                 val title = it.getString(titleColumn)
                 val data = it.getString(dataColumn)
-                Log.d("Data Column:", data)
                 val mimeType = it.getString(mimeTypeColumn)
 
                 val audioUri: Uri = ContentUris.withAppendedId(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id
                 )
 
+                // Store column values and contentUri in a local object representing the audio file
                 audioFiles.add(AudioFile(audioUri, title, data, mimeType))
             }
             Log.d("AudioFileAccessor", "Number of audio files after loop: ${audioFiles.size}")
