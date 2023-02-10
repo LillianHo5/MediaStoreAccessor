@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Check whether or not the application has permission to access files.
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_EXTERNAL_STORAGE
@@ -32,16 +33,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun accessAudioFiles() {
-        var audioFileAccessor = AudioFileAccessor()
-        var audioFiles = audioFileAccessor.getAudioFiles(contentResolver)
-        var audioTextView = findViewById<TextView>(R.id.audioFileTextView)
+        val audioFileAccessor = AudioFileAccessor()
+        val audioFiles = audioFileAccessor.getAudioFiles(contentResolver)
+        val audioTextView = findViewById<TextView>(R.id.audioFileTextView)
         Log.i("Audio File Size:", audioFiles.size.toString())
         var audioFileText = ""
         if (audioFiles.isEmpty()) {
             audioTextView.text = "No audio files found in the media store."
         } else {
+            // Loop over each of the audio files retrieved and display the file path on the screen.
             for (audioFile in audioFiles) {
-                audioFileText += audioFile.title + "\n "
+                audioFileText += audioFile.data + "\n "
             }
             audioTextView.text = audioFileText
         }

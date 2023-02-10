@@ -6,20 +6,16 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 
-// Resources used: https://developer.android.com/training/data-storage/shared/media
+// Resource used: https://developer.android.com/training/data-storage/shared/media.
 class AudioFileAccessor {
-    // Container for information about each audio file
+
+    // Container for information about each audio file.
     data class AudioFile(
         val uri: Uri,
         val title: String,
         val data: String,
         val mimeType: String
     )
-
-    /*
-        TODO: make an example code that creates + saves file -> read it??
-        Downgrade android version (i.e. emulator of 7)??
-    */
 
     fun getAudioFiles(contentResolver: ContentResolver): List<AudioFile> {
 
@@ -34,19 +30,20 @@ class AudioFileAccessor {
             MediaStore.Audio.Media.MIME_TYPE
         )
 
-        // Select audio files with the mp4 extension (recorded files on AudioMoth end with .mp4)
+        // Select audio files with the mp4 extension (recorded files on AudioMoth end with .mp4, but testing with .wav files)
         val selection = "${MediaStore.Audio.Media.MIME_TYPE} = ?"
-        val selectionArgs = arrayOf("audio/wav")
+        val selectionArgs =
+            arrayOf("audio/x-wav") // MIME type for wav files (https://www.mpi.nl/corpus/html/lamus2/apa.html
 
         val query = contentResolver.query(
             collection,
             projection,
-            null,
-            null,
+            selection,
+            selectionArgs,
             null
         )
 
-        // Add error handling in case the query is null
+        // Add error handling in case the query is null.
         if (query == null) {
             Log.e("AudioFileAccessor", "Query returned null.")
             return audioFiles
@@ -65,13 +62,13 @@ class AudioFileAccessor {
                 val title = it.getString(titleColumn)
                 val data = it.getString(dataColumn)
                 val mimeType = it.getString(mimeTypeColumn)
-                Log.e("Hello2", "hi2 :-)")
+                Log.d("AudioFileAccessor", "MIME type: $mimeType")
 
                 val audioUri: Uri = ContentUris.withAppendedId(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id
                 )
 
-                // Store column values and contentUri in a local object representing the audio file
+                // Store column values and contentUri in a local object representing the audio file.
                 audioFiles.add(AudioFile(audioUri, title, data, mimeType))
             }
             Log.d("AudioFileAccessor", "Number of audio files after loop: ${audioFiles.size}")
