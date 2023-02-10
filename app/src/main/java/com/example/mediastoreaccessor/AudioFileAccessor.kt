@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 
+// Resources used: https://developer.android.com/training/data-storage/shared/media
 class AudioFileAccessor {
     // Container for information about each audio file
     data class AudioFile(
@@ -14,9 +15,11 @@ class AudioFileAccessor {
         val data: String,
         val mimeType: String
     )
+
     /*
         TODO: make an example code that creates + saves file -> read it??
-     */
+        Downgrade android version (i.e. emulator of 7)??
+    */
 
     fun getAudioFiles(contentResolver: ContentResolver): List<AudioFile> {
 
@@ -38,8 +41,8 @@ class AudioFileAccessor {
         val query = contentResolver.query(
             collection,
             projection,
-            selection,
-            selectionArgs,
+            null,
+            null,
             null
         )
 
@@ -62,6 +65,7 @@ class AudioFileAccessor {
                 val title = it.getString(titleColumn)
                 val data = it.getString(dataColumn)
                 val mimeType = it.getString(mimeTypeColumn)
+                Log.e("Hello2", "hi2 :-)")
 
                 val audioUri: Uri = ContentUris.withAppendedId(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id
